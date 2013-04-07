@@ -278,17 +278,30 @@
                                            "top:"    + (elementPosition.top - 5)     + "px;" +
                                            "left: "  + (elementPosition.left - 5)    + "px;");
 
-      // Copy targetElement content into new layer and display it when the highlight has finished moving
-      oldHelperContentLayer.innerHTML = '';
-      setTimeout(function(){
-        oldHelperContentLayer.innerHTML = _cloneWithStyles(targetElement).outerHTML;
-      }, 300);
 
-      //set current step to the label
-      oldHelperNumberLayer.innerHTML = targetElement.getAttribute("data-step");
-      //set current tooltip text
-      oldtooltipLayer.innerHTML = targetElement.getAttribute("data-intro");
-      _placeTooltip(targetElement, oldtooltipContainer, oldArrowLayer);
+
+
+      //remove old classes
+      var oldShowElement = document.querySelector('.introjs-showElement');
+      oldShowElement.className = oldShowElement.className.replace(/introjs-[a-zA-Z]+/g, '').replace(/^\s+|\s+$/g, '');
+      //we should wait until the CSS3 transition is competed (it's 0.3 sec) to prevent incorrect `height` and `width` calculation
+      if (self._lastShowElementTimer) {
+        clearTimeout(self._lastShowElementTimer);
+      }
+	   oldHelperContentLayer.innerHTML = '';
+	   oldtooltipContainer.style.opacity = 0;
+      self._lastShowElementTimer = setTimeout(function() {
+        // Copy targetElement content into new layer and display it when the highlight has finished moving
+        oldHelperContentLayer.innerHTML = _cloneWithStyles(targetElement).outerHTML;
+        //set current step to the label
+        oldHelperNumberLayer.innerHTML = targetElement.getAttribute('data-step');
+        //set current tooltip text
+        oldtooltipLayer.innerHTML = targetElement.getAttribute('data-intro');
+        //set the tooltip position
+        _placeTooltip.call(self, targetElement, oldtooltipContainer, oldArrowLayer);
+        //show the tooltip
+        oldtooltipContainer.style.opacity = 1;
+      }, 350);
     } else {
       var helperLayer = document.createElement("div"),
           helperContentLayer = document.createElement("div"),
