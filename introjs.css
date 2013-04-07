@@ -35,12 +35,10 @@
 
 .introjs-helperNumberLayer {
   position: absolute;
-  top: -16px;
-  left: -16px;
   z-index: 9999999999 !important;
   padding: 2px;
   font-family: Arial, verdana, tahoma;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: bold;
   color: white;
   text-align: center;
@@ -52,16 +50,31 @@
   background:     -ms-linear-gradient(top, #ff3019 0%, #cf0404 100%); /* IE10+ */
   background:      -o-linear-gradient(top, #ff3019 0%, #cf0404 100%); /* Opera 11.10+ */
   background:         linear-gradient(to bottom, #ff3019 0%, #cf0404 100%);  /* W3C */
-  width: 20px;
-  height:20px;
-  line-height: 20px;
+  width: 12px;
+  height:12px;
+  line-height: 12px;
   border: 3px solid white;
   border-radius: 50%;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3019', endColorstr='#cf0404', GradientType=0); /* IE6-9 */
   filter: progid:DXImageTransform.Microsoft.Shadow(direction=135, strength=2, color=ff0000); /* IE10 text shadows */
   box-shadow: 0 2px 5px rgba(0,0,0,.4);
 }
-
+.introjs-helperNumberLayer.top-left {
+  top: -12px;
+  left: -12px;
+}
+.introjs-helperNumberLayer.top-right {
+  top: -12px;
+  right: -12px;
+}
+.introjs-helperNumberLayer.bottom-left {
+  bottom: -11px;
+  left: -11px;
+}
+.introjs-helperNumberLayer.bottom-right {
+  bottom: -11px;
+  right: -11px;
+}
 .introjs-arrow {
   border: 5px solid white;
   content:'';
@@ -74,6 +87,12 @@
   border-bottom-color:white;
   border-left-color:transparent;
 }
+.introjs-arrow.top-right {
+	right: 10px;
+}
+.introjs-arrow.top-left {
+	left: 10px;
+}
 .introjs-arrow.right {
   right: -10px;
   top: 10px;
@@ -82,12 +101,24 @@
   border-bottom-color:transparent;
   border-left-color:white;
 }
+.introjs-arrow.right-top {
+
+}
+.introjs-arrow.right-bottom {
+
+}
 .introjs-arrow.bottom {
   bottom: -10px;
   border-top-color:white;
   border-right-color:transparent;
   border-bottom-color:transparent;
   border-left-color:transparent;
+}
+.introjs-arrow.bottom-right {
+	right: 10px;
+}
+.introjs-arrow.bottom-left {
+	left: 10px;
 }
 .introjs-arrow.left {
   left: -10px;
@@ -96,6 +127,12 @@
   border-right-color:white;
   border-bottom-color:transparent;
   border-left-color:transparent;
+}
+.introjs-arrow.left-top {
+
+}
+.introjs-arrow.left-bottom {
+
 }
 
 .introjs-tooltip {
