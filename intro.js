@@ -220,7 +220,7 @@
    * @param {Object} numberLayer
    */
   function _placeTooltip(targetElement, tooltipLayer, arrowLayer, numberLayer) {
-      var tooltipLayerPosition = _getOffset(tooltipLayer),
+      var tooltipLayerPosition,
           targetPosition = _getOffset(targetElement),
           viewport = _getWinSize();
 
@@ -229,6 +229,8 @@
       tooltipLayer.style.right = null;
       tooltipLayer.style.bottom = null;
       tooltipLayer.style.left = null;
+
+      tooltipLayerPosition = _getOffset(tooltipLayer);
 
       if(targetPosition.top < 15 && targetPosition.left < 15) {
         numberLayer.className = "introjs-helperNumberLayer bottom-right";
@@ -318,8 +320,8 @@
       if (self._lastShowElementTimer) {
         clearTimeout(self._lastShowElementTimer);
       }
-	   oldHelperContentLayer.innerHTML = '';
-	   oldtooltipContainer.style.opacity = 0;
+      oldHelperContentLayer.innerHTML = '';
+      oldtooltipContainer.style.opacity = 0;
       self._lastShowElementTimer = setTimeout(function() {
         // Copy targetElement content into new layer and display it when the highlight has finished moving
         oldHelperContentLayer.innerHTML = _cloneWithStyles(targetElement).outerHTML;
