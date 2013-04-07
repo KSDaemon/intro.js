@@ -217,33 +217,63 @@
    * @param {Object} targetElement
    * @param {Object} tooltipLayer
    * @param {Object} arrowLayer
+   * @param {Object} numberLayer
    */
-  function _placeTooltip(targetElement, tooltipLayer, arrowLayer) {
-      var tooltipLayerPosition = _getOffset(tooltipLayer);
+  function _placeTooltip(targetElement, tooltipLayer, arrowLayer, numberLayer) {
+      var tooltipLayerPosition = _getOffset(tooltipLayer),
+          targetPosition = _getOffset(targetElement),
+          viewport = _getWinSize();
+
       //reset the old style
       tooltipLayer.style.top = null;
       tooltipLayer.style.right = null;
       tooltipLayer.style.bottom = null;
       tooltipLayer.style.left = null;
+
+      if(targetPosition.top < 10 && targetPosition.left < 10) {
+        numberLayer.className = "introjs-helperNumberLayer bottom-right";
+      }
+      else if(targetPosition.top < 10) {
+        numberLayer.className = "introjs-helperNumberLayer bottom-left";
+      }
+      else if(targetPosition.left < 10) {
+        numberLayer.className = "introjs-helperNumberLayer top-right";
+      }
+      else {
+        numberLayer.className = "introjs-helperNumberLayer top-left";
+      }
+
       switch (targetElement.getAttribute('data-position')) {
         case 'top':
-          tooltipLayer.style.left = "15px";
-          tooltipLayer.style.top = "-" + (tooltipLayerPosition.height + 10) + "px";
-          arrowLayer.className = 'introjs-arrow bottom';
+          tooltipLayer.style.top = "-" + (tooltipLayerPosition.height + 12) + "px";
+          if(tooltipLayerPosition.width + tooltipLayerPosition.left < viewport.width) {
+            tooltipLayer.style.left = "15px";
+            arrowLayer.className = 'introjs-arrow bottom bottom-left';
+          }
+          else {
+            arrowLayer.className = 'introjs-arrow bottom bottom-right';
+            tooltipLayer.style.right = "0";
+          }
           break;
         case 'right':
-          tooltipLayer.style.right = "-" + (tooltipLayerPosition.width + 10) + "px";
+          tooltipLayer.style.right = "-" + (tooltipLayerPosition.width + 12) + "px";
           arrowLayer.className = 'introjs-arrow left';
           break;
         case 'left':
           tooltipLayer.style.top = "15px";
-          tooltipLayer.style.left = "-" + (tooltipLayerPosition.width + 10) + "px";
+          tooltipLayer.style.left = "-" + (tooltipLayerPosition.width + 12) + "px";
           arrowLayer.className = 'introjs-arrow right';
           break;
         case 'bottom':
         default:
-          tooltipLayer.style.bottom = "-" + (tooltipLayerPosition.height + 10) + "px";
-          arrowLayer.className = 'introjs-arrow top';
+        tooltipLayer.style.bottom = "-" + (tooltipLayerPosition.height + 12) + "px";
+        if(tooltipLayerPosition.width + tooltipLayerPosition.left < viewport.width) {
+          arrowLayer.className = 'introjs-arrow top top-left';
+        }
+        else {
+          arrowLayer.className = 'introjs-arrow top top-right';
+          tooltipLayer.style.right = "0";
+        }
           break;
       }
     }
@@ -278,17 +308,30 @@
                                            "top:"    + (elementPosition.top - 5)     + "px;" +
                                            "left: "  + (elementPosition.left - 5)    + "px;");
 
-      // Copy targetElement content into new layer and display it when the highlight has finished moving
-      oldHelperContentLayer.innerHTML = '';
-      setTimeout(function(){
-        oldHelperContentLayer.innerHTML = _cloneWithStyles(targetElement).outerHTML;
-      }, 300);
 
-      //set current step to the label
-      oldHelperNumberLayer.innerHTML = targetElement.getAttribute("data-step");
-      //set current tooltip text
-      oldtooltipLayer.innerHTML = targetElement.getAttribute("data-intro");
-      _placeTooltip(targetElement, oldtooltipContainer, oldArrowLayer);
+
+
+      //remove old classes
+      var oldShowElement = document.querySelector('.introjs-showElement');
+      oldShowElement.className = oldShowElement.className.replace(/introjs-[a-zA-Z]+/g, '').replace(/^\s+|\s+$/g, '');
+      //we should wait until the CSS3 transition is competed (it's 0.3 sec) to prevent incorrect `height` and `width` calculation
+      if (self._lastShowElementTimer) {
+        clearTimeout(self._lastShowElementTimer);
+      }
+	   oldHelperContentLayer.innerHTML = '';
+	   oldtooltipContainer.style.opacity = 0;
+      self._lastShowElementTimer = setTimeout(function() {
+        // Copy targetElement content into new layer and display it when the highlight has finished moving
+        oldHelperContentLayer.innerHTML = _cloneWithStyles(targetElement).outerHTML;
+        //set current step to the label
+        oldHelperNumberLayer.innerHTML = targetElement.getAttribute('data-step');
+        //set current tooltip text
+        oldtooltipLayer.innerHTML = targetElement.getAttribute('data-intro');
+        //set the tooltip position
+        _placeTooltip.call(self, targetElement, oldtooltipContainer, oldArrowLayer, oldHelperNumberLayer);
+        //show the tooltip
+        oldtooltipContainer.style.opacity = 1;
+      }, 350);
     } else {
       var helperLayer = document.createElement("div"),
           helperContentLayer = document.createElement("div"),
@@ -358,7 +401,7 @@
       tooltipButtonsLayer.appendChild(nextTooltipButton);
 
       //set proper position
-      _placeTooltip.call(self, targetElement, tooltipLayer, arrowLayer);
+      _placeTooltip.call(self, targetElement, tooltipLayer, arrowLayer, helperNumberLayer);
     }
 
     //add target element position style
