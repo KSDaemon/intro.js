@@ -230,13 +230,13 @@
       tooltipLayer.style.bottom = null;
       tooltipLayer.style.left = null;
 
-      if(targetPosition.top < 10 && targetPosition.left < 10) {
+      if(targetPosition.top < 15 && targetPosition.left < 15) {
         numberLayer.className = "introjs-helperNumberLayer bottom-right";
       }
-      else if(targetPosition.top < 10) {
+      else if(targetPosition.top < 15) {
         numberLayer.className = "introjs-helperNumberLayer bottom-left";
       }
-      else if(targetPosition.left < 10) {
+      else if(targetPosition.left < 15) {
         numberLayer.className = "introjs-helperNumberLayer top-right";
       }
       else {
